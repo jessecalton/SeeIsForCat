@@ -2,11 +2,10 @@
   "name": "SeeIsForCat",
   "displayName": "SeeIsForCat",
   "expo": {
+    "sdkVersion": "38.0.0",
     "name": "SeeIsForCat",
     "slug": "SeeIsForCat",
     "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ]
+    "assetBundlePatterns": ["**/*"]
   }
 }
