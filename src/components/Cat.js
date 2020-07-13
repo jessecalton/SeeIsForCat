@@ -1,6 +1,13 @@
 import axios from '../services/Axios';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 
 const Cat = () => {
   const faker = require('faker');
@@ -10,25 +17,29 @@ const Cat = () => {
 
   useEffect(() => {
     axios
-      .get('images/search?limit=1&mime_types=jpg%2Cpng')
+      .get('images/search?ormat=json&mime_types=jpg%2Cpng')
       .then((response) => response.data)
-      .then((data) => {
-        setCatURL(data[0].url);
-      })
-      .catch((error) => console.error(error))
+      .then((data) => setCatURL(data[0].url))
+      .then(() => console.log(catURL))
+      .catch((error) => console.log(error))
       .finally(() => setLoading(false));
+    return () => setCatURL('');
   }, [isLoading]);
+
+  useEffect(() => {
+    setCatName(faker.name.firstName());
+  }, [isLoading]);
+
   return (
     <View style={styles.container}>
-      <Text>Placeholder</Text>
       <View style={styles.imageContainer}>
-        {isLoading ? null : (
+        {!isLoading && catURL !== '' ? (
           <Image style={styles.tinyLogo} source={{ uri: catURL }} />
+        ) : (
+          <ActivityIndicator />
         )}
       </View>
-      {isLoading ? null : (
-        <Text>This cat is named {faker.name.firstName()}</Text>
-      )}
+      <Text>This cat is named {catName}</Text>
 
       <TouchableOpacity style={styles.button} onPress={() => setLoading(true)}>
         <Text>Press Button Get Cat</Text>
