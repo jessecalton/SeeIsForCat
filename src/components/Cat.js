@@ -1,5 +1,5 @@
 import axios from '../services/Axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -11,37 +11,39 @@ import {
 
 const Cat = () => {
   const faker = require('faker');
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
   const [catURL, setCatURL] = useState('');
   const [catName, setCatName] = useState('');
-
-  useEffect(() => {
-    axios
-      .get('images/search?ormat=json&mime_types=jpg%2Cpng')
-      .then((response) => response.data)
-      .then((data) => setCatURL(data[0].url))
-      .then(() => console.log(catURL))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
-    return () => setCatURL('');
-  }, [isLoading]);
-
-  useEffect(() => {
+  const sendRequest = useCallback(async () => {
+    if (isLoading) return;
+    setLoading(true);
+    const response = await axios.get(
+      'images/search?ormat=json&mime_types=jpg%2Cpng'
+    );
+    console.log(response.data[0].url);
+    setCatURL(response.data[0].url);
     setCatName(faker.name.firstName());
+    setLoading(false);
   }, [isLoading]);
 
+  // set conditions for loading cat picture and cat name
+  let image;
+  let namePlate;
+  if (!isLoading && catURL !== '') {
+    image = <Image style={styles.catPicture} source={{ uri: catURL }} />;
+    namePlate = <Text>This cat is named {catName}</Text>;
+  } else if (isLoading) {
+    image = <ActivityIndicator />;
+    namePlate = <Text>This cat is named {catName}</Text>;
+  } else {
+    image = null;
+    namePlate = <Text>Press the button to get a cat!</Text>;
+  }
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        {!isLoading && catURL !== '' ? (
-          <Image style={styles.tinyLogo} source={{ uri: catURL }} />
-        ) : (
-          <ActivityIndicator />
-        )}
-      </View>
-      <Text>This cat is named {catName}</Text>
-
-      <TouchableOpacity style={styles.button} onPress={() => setLoading(true)}>
+      <View style={styles.imageContainer}>{image}</View>
+      {namePlate}
+      <TouchableOpacity style={styles.button} onPress={sendRequest}>
         <Text>Press Button Get Cat</Text>
       </TouchableOpacity>
     </View>
@@ -61,8 +63,10 @@ const styles = StyleSheet.create({
   imageContainer: {
     margin: 'auto',
     alignItems: 'center',
+    width: 250,
+    height: 250,
   },
-  tinyLogo: {
+  catPicture: {
     width: 250,
     height: 250,
   },
