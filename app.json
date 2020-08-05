@@ -3,9 +3,19 @@
   "displayName": "SeeIsForCat",
   "expo": {
     "sdkVersion": "38.0.0",
+    "icon": "./seeisforcat.png",
+    "description": "Press button, see cat!",
+    "orientation": "portrait",
     "name": "SeeIsForCat",
     "slug": "SeeIsForCat",
     "version": "1.0.0",
-    "assetBundlePatterns": ["**/*"]
+    "ios": {
+      "bundleIdentifier": "com.jessecalton.seeisforcat",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.jessecalton.seeisforcat",
+      "versionCode": 1
+    }
   }
 }
