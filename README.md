@@ -1,10 +1,8 @@
 # See Is For Cat
 
-### Press button get cat
+## Press button get cat
 
 That's it! That's the app!
-
-## Demo
 
 [Demo GIF](/assets/appDemo.gif)
 
